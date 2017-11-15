@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Spinner from 'react-spinkit';
 import {searchCharacters} from '../actions';
+import store from '../store'
 
 export class CharacterSearch extends React.Component {
     renderResults() {
@@ -19,13 +20,20 @@ export class CharacterSearch extends React.Component {
 
         return <ul className="character-search-results">{characters}</ul>;
     }
-
+    onSearch(event) {
+        event.preventDefault();
+        if (this.props.onSearch) {
+            const value = this.input.value;
+            this.props.onSearch(value);
+        }
+        store.dispatch(searchCharacters(this.input.value))
+        this.input.value = '';
+    }
     render() {
         return (
             <div className="character-search">
-                {/* When this form is submitted you should submit the
-                    searchCharacters action */}
-                <form>
+                
+                <form onSubmit={e => this.onSearch(e)}>
                     <input type="search" ref={input => (this.input = input)} />
                     <button>Search</button>
                 </form>
